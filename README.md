@@ -3,7 +3,7 @@
 This repository hosts a fully transparent and automated lottery draw.
 
 ### 📅 Schedule
-- **Time**: January 1, 2026, 20:00 (UTC+8)
+- **Time**: January 1, 2026, 21:00 (UTC+8)
 - **Pool**: Numbers 1 to 300
 - **Winners**: 10 participants
 
