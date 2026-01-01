@@ -1,0 +1,41 @@
+name: One-time Public Lottery Draw
+
+on:
+  schedule:
+    # 2026-01-01 21:00 北京时间（UTC+8）
+    - cron: '0 13 1 1 *'
+
+jobs:
+  draw:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Safety check (run only once)
+        run: |
+          if [ -f results/done ]; then
+            echo "Already executed, exiting."
+            exit 0
+          fi
+
+      - name: Run draw
+        run: |
+          mkdir -p results
+          shuf -i 1-300 -n 10 | sort -n > results/result.txt
+          date -u > results/time.txt
+          echo "$GITHUB_RUN_ID" > results/run_id.txt
+
+      - name: Mark as done
+        run: |
+          echo "done" > results/done
+
+      - name: Commit result and lock workflow
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add results/
+          git commit -m "One-time lottery draw (run $GITHUB_RUN_ID)"
+          git push
